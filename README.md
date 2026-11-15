@@ -2,52 +2,59 @@
   <img src="assets/logo.svg" width="96" alt="dsh-market logo">
 </p>
 
-# dsh-market
+# dsh-market for ZadLoop
 
-English | [中文](README.zh.md)
+English | العربية
 
-[![npm](https://img.shields.io/npm/v/dshmarket)](https://www.npmjs.com/package/dshmarket)
-[![stars](https://img.shields.io/github/stars/dsh-market/dsh-market?style=flat)](https://github.com/dsh-market/dsh-market)
+**EN:** This repository is a byte-identical redistribution of the dsh-market plugin, pinned to `dshmarket@1.73.19` and verified working on ZadLoop (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Everything in this page is about ZadLoop only. Written with AI assistance; the error and the fix are real and tested on an actual machine.
 
-## ZadLoop distribution (pinned working build)
+**AR:** المستودع ده نسخة مطابقة من بلجن سوق الإضافات، مثبت على نسخة مجربة وشغالة على ZadLoop. كل اللي في الصفحة دي عن ZadLoop بس. الشرح اتجمع بمساعدة AI، بس الخطأ والحل حقيقيين واتجربوا على جهاز فعلي.
 
-This repository is a byte-identical redistribution of the **dsh-market plugin for ZadLoop** (ZadLoop = DeepSeek Harness desktop distribution), pinned to `dshmarket@1.73.19` — the exact build verified working against the ZadLoop runtime (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Its package name stays `dshmarket`, so the market's self-management (updates, removal, groups) behaves identically.
+## Install first: one command
 
-The package content is untouched; only this README section, provenance notes, and the pinned install instructions were added here.
+**EN:** Type one line in your terminal. It finds ZadLoop's own Node runtime, puts ZadLoop's pnpm on the `PATH` first, and installs the market into the `web` profile. No app restart needed.
 
-### Install first: one command in your terminal
+**AR:** اكتب سطر واحد في التيرمنال. السكريبت بيوصلك لـ Node بتاع ZadLoop، بيحط pnpm بتاع ZadLoop الأول في الـ `PATH`، وبيثبت السوق في البروفايل `web`. من غير ريستارت.
 
-Type **one line** in your terminal — it finds ZadLoop's own Node runtime, installs the plugin into the `web` profile, and the profile hot-reloads live (no app restart needed, see HMR below).
-
-**Linux / macOS — Terminal:**
+**Linux / macOS:**
 
 ```sh
 curl -fsSL https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.sh | bash
 ```
 
-**Windows — PowerShell:**
+**Windows (PowerShell):**
 
 ```powershell
 irm https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.ps1 | iex
 ```
 
-When it finishes, open ZadLoop → **Plugins** (or the **Plugin Market** sidebar entry) — the market is active and working.
+**EN:** When it finishes, open ZadLoop's Plugins page: the market is live.
 
-Other profile than `web`? Export `ZL_PROFILE=<name>` (or `$env:ZL_PROFILE` on Windows) first. Custom install locations: `ZL_RUNTIME`, `ZL_DSH_HOME`, `ZL_NODE`.
+**AR:** لما يخلص، افتح صفحة Plugins في ZadLoop: السوق شغال على طول.
 
-### لو التثبيت فشل عندك، الحل جاهز هنا
+Profile other than `web`? Export `ZL_PROFILE=<name>` first (`$env:ZL_PROFILE` on Windows). Custom locations: `ZL_RUNTIME`, `ZL_DSH_HOME`, `ZL_NODE`.
 
-الموضوع بدأ لما ضغطت Install على الإضافة. المهمة اتلغت بعد شوية برسالة إن `node_modules` معمولة بنسخة pnpm مختلفة، والاسترجاع التلقائي وقع بنفس الخطأ. في لوحة المهام ظهر عندي تلات عمليات ملغية ورا بعض.
+## لو التثبيت فشل عندك، الحل جاهز هنا / If the install fails, the fix is here
 
-السبب طلع بسيط. الجهاز عنده نسختين من pnpm: نسخة قديمة متسطبة في `~/.local/bin`، ونسخة 11 جاية جوه ZadLoop نفسه. كل نسخة من pnpm بتخزن شغلها في مجلد اسمه فيه رقم نسختها، يعني `v10` و`v11` مش هيشاركوا نفس `node_modules`، ومفيش طريقة يخلص فيها الموضوع على النسخة الغلط. عشان كده كمان الإصلاح اليدوي والإعادة التلقائية بيقعوا بنفس الخطأ.
+**AR:** الموضوع بدأ لما ضغطت Install على الإضافة. المهمة اتلغت بعد شوية برسالة إن `node_modules` معمولة بنسخة pnpm مختلفة، والاسترجاع التلقائي وقع بنفس الخطأ. في لوحة المهام ظهر عندي تلات عمليات ملغية ورا بعض.
 
-لقيت النسخة 11 جاهزة جوه ملفات ZadLoop، عملت ليها symlink مكان القديمة، ورجعت جربت التثبيت، وعدى من أول مرة. وبعدها حطيت الحل ده جوه سكريبت التثبيت في المستودع: سطر واحد يسطب السوق كله وبيظبط النسخة لوحده. محتاج تثبيت يدوي؟ ظبط الـ `PATH` زي ما هو مكتوب في القسم اللي تحت.
+السبب طلع بسيط. الجهاز عنده نسختين من pnpm: نسخة قديمة في `~/.local/bin`، ونسخة 11 جاية جوه ZadLoop نفسه. كل نسخة من pnpm بتخزن شغلها في مجلد اسمه فيه رقم نسختها، يعني `v10` و`v11` مش هيشاركوا نفس `node_modules`، ومفيش طريقة يخلص فيها الموضوع على النسخة الغلط. عشان كده الإصلاح اليدوي والإعادة التلقائية بيقعوا بنفس الخطأ.
 
-ونقطة أخيرة: الشرح ده اتجمع بمساعدة AI، بس الخطأ والحل حقيقيين واتجربوا على جهاز فعلي. لو حد شاف "Waiting for agents to go idle" بس من غير إيرور، فده مش مشكلة أصلاً. السوق بيستنى الجلسات تخلص قبل ما يعدّل ملفات البروفايل، وبيكمّل التثبيت أول ما تخلص. اقفل الجلسة واستنى شوية، أو دوس Run now لما مفيش جلسة شغالة.
+الحل بقى مدمج في سكريبت التثبيت فوق: بيحط pnpm نسخة 11 بتاع ZadLoop الأول في الـ `PATH` قبل ما يثبّت، فالمشكلة بتتحل لوحدها. أنا لقيت النسخة 11 جاهزة جوه ملفات ZadLoop، عملت ليها symlink مكان القديمة ورجعت جربت، وعدى من أول مرة.
 
-### Manual install (Linux, equivalent to the script)
+**EN:** The install fails when the pnpm first on your `PATH` is a different major than the one ZadLoop runs on. Each pnpm major writes its version into its store directory (`v10` vs `v11`), so two majors cannot share one `node_modules`, and rebuilds and the automatic rollback fail the same way. The install script above fixes this for you by putting ZadLoop's own pnpm first on the `PATH` before it installs anything.
 
-If a `pnpm` different in major version from ZadLoop's own (`dshmarket` bundles it — currently v11) is first on your `PATH`, the store location mismatches and the command fails; put ZadLoop's bundled pnpm first (the script does this for you):
+## Waiting for agents to go idle
+
+**AR:** لو ظهرك "Waiting for agents to go idle" بس من غير إيرور، فده مش مشكلة أصلاً. السوق بيستنى الجلسات تخلص قبل ما يعدّل ملفات البروفايل، وبيكمّل التثبيت أول ما تخلص. اقفل الجلسة واستنى شوية، أو دوس Run now لما مفيش جلسة شغالة.
+
+**EN:** The market refuses profile changes while an agent session is mid-turn. The install queues and runs the moment sessions finish. Nothing to fix; close the session or press Run now when nothing is running.
+
+## Manual install (Linux)
+
+**EN:** Equivalent to the script, if you prefer to run it by hand: put ZadLoop's bundled pnpm first on the `PATH` (the part the script does for you), then add the plugin.
+
+**AR:** نفس اللي بيعمله السكريبت لو بتحب بالإيد: خلي pnpm بتاع ZadLoop الأول في الـ `PATH` (دي الحتة اللي السكريبت بيعملها)، وبعدين ثبّت.
 
 ```sh
 RUNTIME=/opt/ZadLoop/resources/app.asar.unpacked/runtime
@@ -60,217 +67,34 @@ PATH="/opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin:$PATH" \
   plugin --profile web add github:ashrymahrm/zadloop-dsh-market
 ```
 
-(The `pnpm/bin` directory has no `pnpm` executable on some installs — if `dsh` then fails to find pnpm, create a one-line shim: an executable `pnpm` file containing `exec "$NODE" /opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin/pnpm.cjs "$@"` in a temp dir prepended to `PATH`, where `$NODE` is ZadLoop's bundled node above.)
+If `pnpm` is missing from `pnpm/bin` on your install, make an executable one-line shim that runs `exec "$NODE" /opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin/pnpm.cjs "$@"` and put its directory first on the `PATH`.
 
-### Works without a restart (HMR)
+## No restart needed (HMR)
 
-ZadLoop enables the DeepSeek Harness HMR bundle by default (`root: []` plus the launcher's profile context): the profile manifest (`dsh.profile.bundles`) and the user patch files are watched, and composition changes — installs included — recompose the running app through one serialized reload. A plugin installed through the Plugin Manager or by the commands above takes effect **without restarting ZadLoop**; source-file watching stays off, which is the intended default.
+**EN:** ZadLoop runs the DeepSeek Harness HMR bundle by default: install and plugin switches hot-reload the running app in about a second, and the choice survives restarts.
 
-### Troubleshooting
+**AR:** ZadLoop شغال بـ HMR افتراضيًا: التثبيت والتشغيل والإيقاف بيتطبقوا على التطبيق الشغال خلال ثانية تقريبًا، والاختيار باقي بعد الريستارت.
 
-- **pnpm store conflict (`…/pnpm/store/v11` vs `/v10`, "node_modules was built by a different pnpm major")** — a deferred install fails (and the automatic rollback fails the same way) when the pnpm first on your `PATH` is a different **major** than the one ZadLoop bundles with dshmarket (v11): each major appends its own version segment to the store dir, so two majors cannot share one `node_modules` and `pnpm install --fix` style rebuilds cannot escape it. Fix: put ZadLoop's bundled pnpm first on `PATH` (exactly what the install scripts do), or accept a full from-scratch reinstall of the profile's `node_modules` on your own major. Verified machine case: user `PATH` pnpm 10.34.9 (`~/.local/bin/pnpm`) vs ZadLoop's bundled 11.28.5 — resolved by upgrading to 11.28.5 and symlinking `~/.local/bin/pnpm` to it.
-- **"Waiting for agents to go idle"** — the market refuses to change profile files while an agent session is mid-turn. It queues the install and runs it automatically when sessions finish. Nothing to fix; just let the session finish (or Cancel and retry later).
-- **pnpm refuses git-hosted builds** — plugins fetched from GitHub that run a build script must appear under `allowBuilds` in the profile's `pnpm-workspace.yaml`. ZadLoop's market prompts for this approval; under a plain CLI install, add the exact key pnpm prints, then re-run.
-- **Install stuck "Queued"** — only one deferred mutation runs at a time, and finished (failed) ones stay as notices in the Tasks panel; dismiss them and press the queued operation's **Run now** when no session is active.
-- Path notes: Linux layout (`/opt/ZadLoop/...`, harness under `~/.config/ZadLoop/harness`) is verified; the Windows/macOS install scripts use the standard Electron desktop layout and auto-detect the runtime, but were not exercised on a Windows/macOS machine — if a path differs, pass `ZL_RUNTIME` / `ZL_DSH_HOME`.
+## Troubleshooting
 
-### Read-only provenance
+**EN:**
 
-- Upstream project: https://github.com/dsh-market/dsh-market (MIT)
-- Catalog of plugins: https://awesome-dsh-plugin.com and `dsh-plugin-catalog` on npm
-- Why GitHub install: installing from a GitHub URL bypasses the npm/registry lookup path, so the market works even when a catalog mirror is unreachable.
+- `pnpm` refuses a git-hosted build: add the key pnpm prints to `allowBuilds` in the profile's `pnpm-workspace.yaml`, then rerun. The market asks for this approval inside ZadLoop on its own.
+- Stuck "Queued": one deferred change runs at a time. Dismiss finished notices in the Tasks panel and press Run now when no session is active.
+- Windows/macOS scripts use the standard desktop layout and auto-detect the runtime; if a path differs on your machine, pass `ZL_RUNTIME` / `ZL_DSH_HOME`.
 
-## About dsh-market (the upstream plugin)
+**AR:**
 
-The plugin market inside DeepSeek Harness. On dsh 0.2.1+ it is a tab on the **Plugins** page, right next to **Installed**; on older hosts open Settings → **Plugin Market**. Browse, search, one-click install.
+- pnpm رافض يبني من git: زود المفتاح اللي بيطلعه في رسالته تحت `allowBuilds` في `pnpm-workspace.yaml` جوه البروفايل، وبعدين حاول تاني. جوه ZadLoop السوق بيطلب الموافقة دي بنفسه.
+- حاطط "Queued" ومش بيمشي: عملية واحدة مؤجلة بتشتغل في المرة. اقفل الاشعارات اللي خلصت من لوحة المهام ودوس Run now لما مفيش جلسة شغالة.
+- سكريبتات ويندوز وماك بتستخدم الهيكل القياسي وبتكتشف الـ runtime لوحدها؛ لو المسار مختلف عندك، مرر `ZL_RUNTIME` / `ZL_DSH_HOME`.
 
-> 📡 **The same catalog is also a plugin market index.** On dsh 0.2.1+, open **Plugins → Discover → Index sources** and add `https://cdn.jsdelivr.net/npm/dsh-plugin-catalog/index.json`. That is this list as a format-1 index, served from npm so it loads quickly everywhere — dsh gives a source 15 seconds, and the GitHub Pages copies (`https://awesome-dsh-plugin.com/index.json` and `https://dshmarket.com/index.json`) can exceed that from some networks. The host's Discover tab and the `plugin_market` agent tool then search it.
+## Provenance
 
-![dsh-market](assets/demo-en.png)
+**EN:** Upstream project: [dsh-market/dsh-market](https://github.com/dsh-market/dsh-market) (MIT). Plugin catalog: [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com). Installing from GitHub bypasses the npm catalog lookup, so the market keeps working when a mirror is unreachable.
 
-One-click themes: install, switch live, no restart.
-
-## Install
-
-- **Official DSH Desktop:** Open **Settings → Plugins** in the app, search for
-  `dshmarket`, and install it through the app's plugin manager. No command line
-  is needed.
-- **Regular `dsh web`:** Run this command, then restart `dsh web`:
-
-  ```sh
-  dsh plugin --profile web add dshmarket
-  ```
-
-- **Custom profile:** Replace `web` in that command with your host's actual
-  profile name: `dsh plugin --profile <profile> add dshmarket`. Follow your
-  host's restart instructions.
-
-- **From the GitHub source (no build):** `add github:dsh-market/dsh-market`
-  makes pnpm ask before running the package's build scripts. The prebuilt
-  tarball attached to the same release installs without that step:
-
-  ```sh
-  dsh plugin --profile <profile> add https://github.com/dsh-market/dsh-market/releases/download/v<version>/dshmarket-<version>.tgz
-  ```
-
-On a machine with DSH Desktop, running `dsh plugin --profile web add dshmarket`
-may report success but installs the market into `profiles/web`, **not** the
-profile used by the Desktop app. It will not appear in Desktop. Install through
-the app's **Settings → Plugins** instead; Desktop's profile is managed by the app.
-
-Once it is installed, open the **Plugins** page and pick the **Plugin Market**
-tab next to **Installed** (dsh 0.2.1 and newer — plain `dsh web` included, no
-desktop app needed). The market is also still a section of **Settings → Plugin
-Market**: on dsh 0.2.0 and older that is the only way in, and from 0.2.1 the
-Settings dialog lives in the account menu. If you would rather reach it in one
-click from anywhere, the market can also put its own **Plugin Market** row in
-the sidebar; turn it on from the market's card under **Plugins**. All three
-entries can be switched individually under **Advanced** in that card, and the
-market refuses to close the last one. Going the
-other way, an installed plugin's **···** menu offers **View in Plugins** on
-dsh 0.2.1+: it opens the host's own page for that plugin, which is the only
-place its individual rows can be switched one by one.
-
-**Requires dsh web 0.1.0-rc.6 or newer.** On an older host the market
-disables itself and says so in the browser console rather than rendering
-against primitives that are not there — if the Plugin Market entry never
-appears, that is usually why. Worth checking when a desktop build bundles
-its own dsh: it may be older than the one `npm` would give you (#139).
-
-## What you get
-
-- **Browse & search** the full community catalog (4200+ plugins, growing daily) — category filters, star counts, top/new sorting, bilingual descriptions that follow your UI language
-- **Host-aware discovery** — cards show the DSH requirement declared by `engines.dsh` or lockstep `@deepseek-ai/dsh-*` peers; the compatibility filter hides only confirmed mismatches with the running host. GitHub-only entries read the linked package's manifest, including monorepo subdirectories; Release downloads read the selected release tag, including the current tag behind `latest/download`. Undeclared, malformed or unavailable requirements stay unknown and visible. Public manifest facts are cached; compatibility is evaluated against the running host
-- **Screenshots** — AppStore-style screenshots, auto-carousel when there's more than one, click to preview full-size: author-curated shots show right on the card (zero extra requests); plugins without curated shots fall back to automatic README extraction once you open the install dialog. Images load from GitHub hosting only
-- **Comments** — every card opens the plugin's discussion thread in place. It is the same thread its pages on [dshmarket.com](https://dshmarket.com) and the [catalog](https://awesome-dsh-plugin.com) show, so a plugin has one conversation rather than three. Backed by GitHub Discussions through giscus: it loads when you open it, needs a GitHub account only to post, and the note above it says plainly that opening it contacts giscus.app and GitHub. On local dsh web, reading stays embedded while a dedicated GitHub action opens the exact discussion in a new tab for sign-in and posting, so the cross-site return never carries or depends on the host session
-- **Favorites** — bookmark plugins and themes from Discover or the Themes tab; a dedicated Favorites tab lists them with search, sort, and install actions. Bookmarks persist in the profile's market state (`state.json`); entries that leave the catalog can be cleared in one click
-- **Groups** — organise installed plugins into named groups (rename, delete, and per-group search); a plugin lives in one group and ungrouped is the default. A group carries its own switch: all-on, all-off, or the mixed state its members are really in, so a working set can be switched as a unit without touching the rest. A group holds at most one theme. The grouping itself is local state in the profile's `state.json`
-- **Notes** — write your own one-line description for any installed plugin and it replaces the author's on that row, so a shelf of forty plugins answers "why did I install this" in your words. Stored locally beside groups and favorites, never sent anywhere
-- **Themes** — a dedicated tab for community themes and skins: install → active immediately, switch with one click (themes are mutually exclusive, your choice survives restarts), uninstall to revert
-- **One-click install** — confirm the source, watch live progress; most plugins go live after a page refresh, no restart
-- **Backup & restore** — export your profile's plugin list and configuration as readable JSON, import it on another machine, store it on WebDAV with daily auto-backup, or sync through a private GitHub Gist; restores **merge** (plugins installed after the backup are kept), validate before writing, and roll back on failure
-- **Updates** — per-plugin update checks (npm version or pinned commit vs HEAD), one-click update, or update everything at once; the market updates itself the same way. A plugin installed from an archive link is updated only through its own source: a catalog entry that merely shares the name is never offered as its update, so updating cannot silently replace it with a different plugin. Each row with an update pending carries a **What changed** link — the release notes, or the commits when the version cannot be aligned to one. A notice you are not acting on can be ignored for the rest of the boot instead of being dismissed again on every reload — scoped to the running host, so a restart brings the reminder back and ignoring it is never the same as turning it off
-- **Resilient GitHub routes** — in the China download region, Git refs, README content, and avatars each keep their own fallback order. The market remembers the last working route, switches only after transport/HTTP/payload validation fails, and rejects proxy error pages disguised as HTTP 200. If every built-in route fails, **Settings → Plugins → Plugin configuration → GitHub acceleration** accepts one persistent custom HTTPS prefix; `DSHM_GITHUB_PROXY` remains the operator-owned override
-- **Public update API** — plugin-owned settings pages can use the versioned, capability-gated [update API v1](UPDATE-API-V1.md) (beta) instead of copying package-manager logic or depending on private Market UI responses
-- **Uninstall** — two-step confirm; plugins installed this session are removed live
-- **Hot disable / enable** — toggles write `- id: …` + `disabled: true|false` into the profile's `cordis.patch.yml` (the official patch layer, mechanism ported from [dsh-plugin-hub](https://github.com/Noob-stupid/dsh-plugin-hub)): DSH's HMR re-composes within ~1s, no restart, and the loader re-applies the choice on every boot; hand-edited patch rows show as badges, host-infrastructure plugins are protected from toggling, and a malformed patch file is never made worse
-- **Restart when needed** — changes that cannot hot-load show a one-click restart beside the pending-change banner; the action is restricted to same-origin loopback requests
-- **Recovery when a restart does not come back** — DSH's boot is all-or-nothing: one plugin that cannot load stops the whole process, and the market's own UI dies with the host it was serving from. Now that failure prompt offers **Adjust plugins**: the ones DSH blamed are marked red and left unticked, you choose what should be enabled at the next start, the choice is written through the same `cordis.patch.yml` rows the market's own toggles use (plus `dsh.profile.bundles` for a disable-carrier), and the boot is retried. It is served by the detached restart helper on the same address the page was already polling, so it works even though the host is gone — and opening the URL fresh renders a standalone version of the same page. When DSH starts normally, none of it appears
-- **Zero jargon** — if a component is missing (pnpm), the market detects it and offers a one-click automatic setup
-- **Log export** — one click produces a sanitized plain-text log for bug reports (home paths and credential shapes are masked; nothing is ever sent anywhere). The market's version sits next to the page heading, so a screenshot of a problem already carries it
-- **Settings card** — on dsh 0.1.0-rc.7 and newer the market manages *itself* next to every other plugin — under **Settings → Plugins → Plugin configuration** while the host still has a Settings page, and on the market's own card on the **Plugins** page from dsh 0.2.1, where Settings is gone: see the running version, pick a **release channel** (stable, or beta to try builds still being verified — the market only, never your other plugins; a third *dev* channel appears once developer mode is switched on, and carries builds published straight off a branch), update, or remove the market — with an opt-in cleanup that also drops the disable rows it wrote, so plugins it switched off start running again rather than staying off with no UI left to switch them back on
-- **Diagnostics** — the plugin load order and conflict surface, one page: bundle stack with official/community badges, duplicate loader entries, dependency version mismatches, multi-version core packages, overrides and invalid config entries, and leftover directories — a package directory an interrupted update left without its `package.json`, and pnpm's own `*_tmp_*` staging directories. Nothing there stops a start, so it is listed rather than warned about, and it is the only place that names what is on disk. Plain-language terms, problem blocks highlighted, everything collapsible
-
-- **Load order** — drag community bundles into the order you want, or take the suggested one derived from the plugins' own before/after rules. Nothing is written until a trial composition passes, and the panel tells you what the new order would change (overrides, invalid or duplicate entries) before you apply it
-- **AI fix** — one click copies a diagnostics-driven fix prompt (errors/warnings/order conflicts + conservative scope instructions) to the clipboard; you paste it into a new conversation and decide whether to send. The prompt first asks the agent to detect whether it is itself the harness running this profile — if so it hard-forbids mutating the live composition, upgrading/restarting the harness or core packages, or reinstalling deps, and instead has it write an idempotent `apply` script plus a `rollback` script, have you run them in an external terminal, and paste the output back
-
-## Speed
-
-Installs prefer repo-verified npm packages, then author-supplied prebuilt GitHub Release tarballs, before falling back to full-repo GitHub source downloads. Prebuilt installs are typically seconds and do not need local build scripts; source-only plugins depend on your connection to GitHub.
-
-## Security
-
-- Installs are restricted to sources listed in the curated [awesome-dsh-plugin](https://awesome-dsh-plugin.com) registry — anything else is rejected
-- Build scripts stay blocked by default (pnpm ≥10); allowing one is your explicit per-package choice
-- Terminal/CLI-surface plugins are flagged before you install them into the web profile
-- The install endpoint accepts same-origin POST only; the market never phones home
-- Backups can contain credentials from your profile config — the UI warns before export and upload; WebDAV sync is https-only, refuses private-network targets, and never stores your password in the browser
-- Authenticated Gist requests always go directly to `api.github.com`; bearer tokens are never sent to a public GitHub acceleration service. GitHub source archives also stay on canonical codeload URLs so pnpm's integrity policy remains in force
-- The restart endpoint additionally requires a direct loopback client (forwarded requests are rejected) and relaunches the exact DSH entry, arguments, environment, and working directory
-- One-click restart launches a detached replacement. **When this host is systemd's own service process the button is hidden automatically** — the market would otherwise kill the takeover process along with the unit's cgroup and the service would not come back. The pending-change notice stays visible and says so. Detection requires both a systemd marker AND being the unit's main process, because `INVOCATION_ID` is inherited by every descendant of a unit (an ordinary terminal included) and hiding the button for those would be the worse bug. pm2 and launchd are not detected, so those deployments need the explicit setting below. Either flip **Allow restart** off in **Settings → Plugins → Plugin configuration**, or write it into the profile patch — where it has to sit under `config:`, because the loader passes only that sub-object to a plugin and a top-level `allowRestart:` is silently ignored (#227 by @Fantasymax):
-
-  ```yaml
-  - id: dsh-market
-    name: dshmarket
-    config:
-      allowRestart: false   # NOT at the top level beside `name:`
-  ```
-
-  **On dsh 0.1.7 and newer there is no switch to flip**: the host derives a plugin's settings from its own Config schema and no longer serves a plugin-registered settings namespace, so the market has no control there. The profile patch below is the way on every host.
-
-  `GET /dsh-market/status` reports `"restart": false` once it has taken effect.
-- Plugins that compile (native modules) build under the environment the dsh process inherited — which a GUI, a systemd/launchd unit, or a Windows Start-menu launch does **not** inherit from your shell. If a plugin needs a newer compiler than the machine's default (`g++` too old while other work depends on that version), pin the build-time variables with `buildEnv` under `config:` — the config equivalent of `CC=... CXX=... dsh` from a terminal, without changing anything globally. Pinned values may override inherited ones but never the `PATH` or `CI` the market computes for its children (issue #336):
-
-  ```yaml
-  - id: dsh-market
-    name: dshmarket
-    config:
-      buildEnv:
-        CC: /usr/bin/gcc-11     # or CXX, NODE_OPTIONS, ...
-        CXX: /usr/bin/g++-11
-  ```
-
-  In the UI the same variables are edited live in **Settings → Plugins → Plugin configuration → dshmarket → Build environment** (one `KEY=value` per line; saving applies to the next install without a restart, and saving an empty list goes back to the profile config above). `PATH` and `CI` are always managed by the market and cannot be overridden from either place.
-- For terminal-attached launches, the detached replacement keeps running after the original terminal closes
-- Listing ≠ endorsement: plugins are third-party code, install sources you trust
-
-## Submit your plugin
-
-**This repo is the market app, not the catalog.** The plugin list comes from the curated [awesome-dsh-plugin](https://github.com/awesome-dsh-plugin/awesome-dsh-plugin) registry — to get your plugin listed in the market, open a PR **there** (one entry in the list; the site and this market pick it up automatically, usually within a day). Please don't PR plugin entries against this repo.
-
-## Roadmap & feedback
-
-- **Bugs** go in [issues](https://github.com/dsh-market/dsh-market/issues) — attaching the market's "Export log" makes diagnosis roughly ten times faster
-- **Feature ideas** go on the [Roadmap](https://github.com/orgs/dsh-market/projects/1). Issues are kept for things that are broken, so a proposal filed as an issue gets moved there and closed; the discussion stays where you wrote it either way
-- Every roadmap item welcomes community PRs — say so on the item before starting, so two people don't build it twice
-
-## Data source
-
-Catalog statistics preserve their source: npm counts cover the stated 30-day window; GitHub-only releases can show lifetime downloads of all public repository Release assets, including packages, checksums and companion files. The counts are never added together or called installations/users. Tooltips include the available collection time; npm-download sorting keeps its existing window. Catalog host declarations are accepted only for the exact pinned install URL, with the existing on-demand manifest lookup retained for older catalogs.
-
-Fetched live on every open from [awesome-dsh-plugin.com/plugins.json](https://awesome-dsh-plugin.com/plugins.json) — curated entries, npm mapping, and star counts refreshed daily by CI, with no stale cache behind it. A failure reports the actual reason and elapsed time, with a Retry button.
-
-There is deliberately no bundled snapshot to fall back on: for a catalog that grows daily, a stale answer is not a degraded one but a wrong one — a plugin published this morning would read as "does not exist".
-
-In the China download region the same catalog is read from npm first, through the same region-aware routes the plugins themselves arrive on: every China mirror already carries it, it comes off the mirror rather than bouncing back to the origin registry, and it carries a version, so a bad catalog build can be rolled back instead of only being fixed forwards. The origin stays last in the list as the route that has always worked. Region detection happens once and the answer is remembered; **Settings → Plugins → Plugin configuration** can override it.
-
-**If that host is unreachable from your network**, point the market at a mirror. Set `DSHM_REGISTRY_URL` in the environment dsh runs in, to anything serving the same `plugins.json` shape:
-
-```sh
-DSHM_REGISTRY_URL=https://your-mirror.example/plugins.json dsh web
-```
-
-## Friends
-
-### DSH Desktop (dataelement)
-
-[dsh-desktop](https://github.com/dataelement/dsh-desktop) — a desktop app for DeepSeek Harness: run and manage a local Harness without installing Node.js yourself. Ships with this plugin market preset as the default. [dshdesktop.com](https://dshdesktop.com)
-
-### DeepSeek Harness Desktop (hairyf)
-
-[deepseek-harness-desktop](https://github.com/hairyf/deepseek-harness-desktop) — a native desktop app for DeepSeek Harness built with **Tauri** (Rust + Web): one-click local install and launch with no Node.js setup required. On first run it offers to install this plugin market as a recommended preset.
-
-### DeepSeek Harness Desktop (anywhere-labs)
-
-[deepseek-harness-desktop](https://github.com/anywhere-labs/deepseek-harness-desktop) — an Electron desktop app for DeepSeek Harness built around the idea that everything is a plugin, including the desktop itself: profile switching, a bundled Node and pnpm, and a recoverable install path that snapshots the profile before a change. [dshdesktop.cn](https://dshdesktop.cn)
-
-### DSH App
-
-[dsh-app](https://github.com/RyensX/dsh-app) — a DeepSeek Harness desktop client built on Tauri 2 rather than Electron, so it ships a much smaller binary and uses the system webview. AGPL-3.0.
-
-### Local DSH
-
-[local-dsh](https://github.com/liangchen-harold/local-dsh) — a DeepSeek Harness desktop client that can run the model on your own machine: it bundles llama.cpp next to Node, pnpm and DSH, so a downloaded GGUF model answers without any external API. Built on Tauri; Apple Silicon Macs for now. [localdsh.com](https://localdsh.com)
-
-### dsh desktop (MochiNek0)
-
-[dsh-desktop](https://github.com/MochiNek0/dsh-desktop) — a cross-platform DeepSeek Harness desktop client built on Tauri (Windows, macOS, Linux). It uses the system webview, so the installer is a few megabytes: 2.3 MB on Windows, 5.8 MB on macOS. It starts `dsh web` in the background on launch and embeds it in a native window, sharing sessions and config with the CLI. This market sits first in the recommended list of its built-in plugin panel, one click to install. A Runtime panel enumerates and switches the machine's Node installs and installs or upgrades dsh, no administrator privileges required, and native notifications fire when a turn ends or dsh is waiting on you. [dsh-desktop.cc.cd](https://dsh-desktop.cc.cd/)
-
-### DSH Get
-
-[DSH Get](https://www.dshget.com/) — a searchable web directory for discovering DeepSeek Harness plugins: category filters, bilingual descriptions, install commands and per-plugin detail pages. Its normalized catalog snapshot is public at [bobby-sheng/dshget-data](https://github.com/bobby-sheng/dshget-data).
-
-### modlens
-
-[modlens](https://github.com/liustack/modlens) — the first vision plugin for DeepSeek Harness: bolts visual understanding onto text-only models like DeepSeek and GLM. Paste an image, get structured JSON evidence back — OCR, layout, semantics. Available right in this market:
-
-```sh
-dsh plugin --profile web add @liustack/modlens
-```
+**AR:** المشروع الأصلي: [dsh-market/dsh-market](https://github.com/dsh-market/dsh-market) بترخيص MIT. كتالوج الإضافات: [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com). التثبيت من GitHub بيتجاوز مسار الكتالوج في npm، فالسوق بيشتغل حتى لو المرايا واصلة.
 
 ## License
 
-MIT · [dshmarket.com](https://dshmarket.com)
-
----
-
+MIT · upstream [dshmarket.com](https://dshmarket.com)
