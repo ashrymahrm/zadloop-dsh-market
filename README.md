@@ -9,6 +9,79 @@ English | [中文](README.zh.md)
 [![npm](https://img.shields.io/npm/v/dshmarket)](https://www.npmjs.com/package/dshmarket)
 [![stars](https://img.shields.io/github/stars/dsh-market/dsh-market?style=flat)](https://github.com/dsh-market/dsh-market)
 
+## ZadLoop distribution (pinned working build)
+
+This repository is a byte-identical redistribution of the **dsh-market plugin for ZadLoop** (ZadLoop = DeepSeek Harness desktop distribution), pinned to `dshmarket@1.73.19` — the exact build verified working against the ZadLoop runtime (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Its package name stays `dshmarket`, so the market's self-management (updates, removal, groups) behaves identically.
+
+The package content is untouched; only this README section, provenance notes, and the pinned install instructions were added here.
+
+### Install first: one command in your terminal
+
+Type **one line** in your terminal — it finds ZadLoop's own Node runtime, installs the plugin into the `web` profile, and the profile hot-reloads live (no app restart needed, see HMR below).
+
+**Linux / macOS — Terminal:**
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.sh | bash
+```
+
+**Windows — PowerShell:**
+
+```powershell
+irm https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.ps1 | iex
+```
+
+When it finishes, open ZadLoop → **Plugins** (or the **Plugin Market** sidebar entry) — the market is active and working.
+
+Other profile than `web`? Export `ZL_PROFILE=<name>` (or `$env:ZL_PROFILE` on Windows) first. Custom install locations: `ZL_RUNTIME`, `ZL_DSH_HOME`, `ZL_NODE`.
+
+### لو التثبيت فشل عندك، الحل جاهز هنا
+
+الموضوع بدأ لما ضغطت Install على الإضافة. المهمة اتلغت بعد شوية برسالة إن `node_modules` معمولة بنسخة pnpm مختلفة، والاسترجاع التلقائي وقع بنفس الخطأ. في لوحة المهام ظهر عندي تلات عمليات ملغية ورا بعض.
+
+السبب طلع بسيط. الجهاز عنده نسختين من pnpm: نسخة قديمة متسطبة في `~/.local/bin`، ونسخة 11 جاية جوه ZadLoop نفسه. كل نسخة من pnpm بتخزن شغلها في مجلد اسمه فيه رقم نسختها، يعني `v10` و`v11` مش هيشاركوا نفس `node_modules`، ومفيش طريقة يخلص فيها الموضوع على النسخة الغلط. عشان كده كمان الإصلاح اليدوي والإعادة التلقائية بيقعوا بنفس الخطأ.
+
+لقيت النسخة 11 جاهزة جوه ملفات ZadLoop، عملت ليها symlink مكان القديمة، ورجعت جربت التثبيت، وعدى من أول مرة. وبعدها حطيت الحل ده جوه سكريبت التثبيت في المستودع: سطر واحد يسطب السوق كله وبيظبط النسخة لوحده. محتاج تثبيت يدوي؟ ظبط الـ `PATH` زي ما هو مكتوب في القسم اللي تحت.
+
+ونقطة أخيرة: الشرح ده اتجمع بمساعدة AI، بس الخطأ والحل حقيقيين واتجربوا على جهاز فعلي. لو حد شاف "Waiting for agents to go idle" بس من غير إيرور، فده مش مشكلة أصلاً. السوق بيستنى الجلسات تخلص قبل ما يعدّل ملفات البروفايل، وبيكمّل التثبيت أول ما تخلص. اقفل الجلسة واستنى شوية، أو دوس Run now لما مفيش جلسة شغالة.
+
+### Manual install (Linux, equivalent to the script)
+
+If a `pnpm` different in major version from ZadLoop's own (`dshmarket` bundles it — currently v11) is first on your `PATH`, the store location mismatches and the command fails; put ZadLoop's bundled pnpm first (the script does this for you):
+
+```sh
+RUNTIME=/opt/ZadLoop/resources/app.asar.unpacked/runtime
+DSH_HOME=~/.config/ZadLoop/harness \
+PATH="/opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin:$PATH" \
+/opt/ZadLoop/resources/primary-runtime/dependencies/node/bin/node \
+  --expose-internals --use-system-ca \
+  --import file://$RUNTIME/lib/runtime.js \
+  $RUNTIME/node_modules/@deepseek-ai/dsh/lib/bin.js \
+  plugin --profile web add github:ashrymahrm/zadloop-dsh-market
+```
+
+(The `pnpm/bin` directory has no `pnpm` executable on some installs — if `dsh` then fails to find pnpm, create a one-line shim: an executable `pnpm` file containing `exec "$NODE" /opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin/pnpm.cjs "$@"` in a temp dir prepended to `PATH`, where `$NODE` is ZadLoop's bundled node above.)
+
+### Works without a restart (HMR)
+
+ZadLoop enables the DeepSeek Harness HMR bundle by default (`root: []` plus the launcher's profile context): the profile manifest (`dsh.profile.bundles`) and the user patch files are watched, and composition changes — installs included — recompose the running app through one serialized reload. A plugin installed through the Plugin Manager or by the commands above takes effect **without restarting ZadLoop**; source-file watching stays off, which is the intended default.
+
+### Troubleshooting
+
+- **pnpm store conflict (`…/pnpm/store/v11` vs `/v10`, "node_modules was built by a different pnpm major")** — a deferred install fails (and the automatic rollback fails the same way) when the pnpm first on your `PATH` is a different **major** than the one ZadLoop bundles with dshmarket (v11): each major appends its own version segment to the store dir, so two majors cannot share one `node_modules` and `pnpm install --fix` style rebuilds cannot escape it. Fix: put ZadLoop's bundled pnpm first on `PATH` (exactly what the install scripts do), or accept a full from-scratch reinstall of the profile's `node_modules` on your own major. Verified machine case: user `PATH` pnpm 10.34.9 (`~/.local/bin/pnpm`) vs ZadLoop's bundled 11.28.5 — resolved by upgrading to 11.28.5 and symlinking `~/.local/bin/pnpm` to it.
+- **"Waiting for agents to go idle"** — the market refuses to change profile files while an agent session is mid-turn. It queues the install and runs it automatically when sessions finish. Nothing to fix; just let the session finish (or Cancel and retry later).
+- **pnpm refuses git-hosted builds** — plugins fetched from GitHub that run a build script must appear under `allowBuilds` in the profile's `pnpm-workspace.yaml`. ZadLoop's market prompts for this approval; under a plain CLI install, add the exact key pnpm prints, then re-run.
+- **Install stuck "Queued"** — only one deferred mutation runs at a time, and finished (failed) ones stay as notices in the Tasks panel; dismiss them and press the queued operation's **Run now** when no session is active.
+- Path notes: Linux layout (`/opt/ZadLoop/...`, harness under `~/.config/ZadLoop/harness`) is verified; the Windows/macOS install scripts use the standard Electron desktop layout and auto-detect the runtime, but were not exercised on a Windows/macOS machine — if a path differs, pass `ZL_RUNTIME` / `ZL_DSH_HOME`.
+
+### Read-only provenance
+
+- Upstream project: https://github.com/dsh-market/dsh-market (MIT)
+- Catalog of plugins: https://awesome-dsh-plugin.com and `dsh-plugin-catalog` on npm
+- Why GitHub install: installing from a GitHub URL bypasses the npm/registry lookup path, so the market works even when a catalog mirror is unreachable.
+
+## About dsh-market (the upstream plugin)
+
 The plugin market inside DeepSeek Harness. On dsh 0.2.1+ it is a tab on the **Plugins** page, right next to **Installed**; on older hosts open Settings → **Plugin Market**. Browse, search, one-click install.
 
 > 📡 **The same catalog is also a plugin market index.** On dsh 0.2.1+, open **Plugins → Discover → Index sources** and add `https://cdn.jsdelivr.net/npm/dsh-plugin-catalog/index.json`. That is this list as a format-1 index, served from npm so it loads quickly everywhere — dsh gives a source 15 seconds, and the GitHub Pages copies (`https://awesome-dsh-plugin.com/index.json` and `https://dshmarket.com/index.json`) can exceed that from some networks. The host's Discover tab and the `plugin_market` agent tool then search it.
@@ -201,73 +274,3 @@ MIT · [dshmarket.com](https://dshmarket.com)
 
 ---
 
-## ZadLoop distribution (pinned working build)
-
-This repository is a byte-identical redistribution of the **dsh-market plugin for ZadLoop** (ZadLoop = DeepSeek Harness desktop distribution), pinned to `dshmarket@1.73.19` — the exact build verified working against the ZadLoop runtime (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Its package name stays `dshmarket`, so the market's self-management (updates, removal, groups) behaves identically.
-
-The package content is untouched; only this README section, provenance notes, and the pinned install instructions were added here.
-
-### Install first: one command in your terminal
-
-Type **one line** in your terminal — it finds ZadLoop's own Node runtime, installs the plugin into the `web` profile, and the profile hot-reloads live (no app restart needed, see HMR below).
-
-**Linux / macOS — Terminal:**
-
-```sh
-curl -fsSL https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.sh | bash
-```
-
-**Windows — PowerShell:**
-
-```powershell
-irm https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.ps1 | iex
-```
-
-When it finishes, open ZadLoop → **Plugins** (or the **Plugin Market** sidebar entry) — the market is active and working.
-
-Other profile than `web`? Export `ZL_PROFILE=<name>` (or `$env:ZL_PROFILE` on Windows) first. Custom install locations: `ZL_RUNTIME`, `ZL_DSH_HOME`, `ZL_NODE`.
-
-### لو التثبيت فشل عندك، الحل جاهز هنا
-
-الموضوع بدأ لما ضغطت Install على الإضافة. المهمة اتلغت بعد شوية برسالة إن `node_modules` معمولة بنسخة pnpm مختلفة، والاسترجاع التلقائي وقع بنفس الخطأ. في لوحة المهام ظهر عندي تلات عمليات ملغية ورا بعض.
-
-السبب طلع بسيط. الجهاز عنده نسختين من pnpm: نسخة قديمة متسطبة في `~/.local/bin`، ونسخة 11 جاية جوه ZadLoop نفسه. كل نسخة من pnpm بتخزن شغلها في مجلد اسمه فيه رقم نسختها، يعني `v10` و`v11` مش هيشاركوا نفس `node_modules`، ومفيش طريقة يخلص فيها الموضوع على النسخة الغلط. عشان كده كمان الإصلاح اليدوي والإعادة التلقائية بيقعوا بنفس الخطأ.
-
-لقيت النسخة 11 جاهزة جوه ملفات ZadLoop، عملت ليها symlink مكان القديمة، ورجعت جربت التثبيت، وعدى من أول مرة. وبعدها حطيت الحل ده جوه سكريبت التثبيت في المستودع: سطر واحد يسطب السوق كله وبيظبط النسخة لوحده. محتاج تثبيت يدوي؟ ظبط الـ `PATH` زي ما هو مكتوب في القسم اللي تحت.
-
-ونقطة أخيرة: الشرح ده اتجمع بمساعدة AI، بس الخطأ والحل حقيقيين واتجربوا على جهاز فعلي. لو حد شاف "Waiting for agents to go idle" بس من غير إيرور، فده مش مشكلة أصلاً. السوق بيستنى الجلسات تخلص قبل ما يعدّل ملفات البروفايل، وبيكمّل التثبيت أول ما تخلص. اقفل الجلسة واستنى شوية، أو دوس Run now لما مفيش جلسة شغالة.
-
-### Manual install (Linux, equivalent to the script)
-
-If a `pnpm` different in major version from ZadLoop's own (`dshmarket` bundles it — currently v11) is first on your `PATH`, the store location mismatches and the command fails; put ZadLoop's bundled pnpm first (the script does this for you):
-
-```sh
-RUNTIME=/opt/ZadLoop/resources/app.asar.unpacked/runtime
-DSH_HOME=~/.config/ZadLoop/harness \
-PATH="/opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin:$PATH" \
-/opt/ZadLoop/resources/primary-runtime/dependencies/node/bin/node \
-  --expose-internals --use-system-ca \
-  --import file://$RUNTIME/lib/runtime.js \
-  $RUNTIME/node_modules/@deepseek-ai/dsh/lib/bin.js \
-  plugin --profile web add github:ashrymahrm/zadloop-dsh-market
-```
-
-(The `pnpm/bin` directory has no `pnpm` executable on some installs — if `dsh` then fails to find pnpm, create a one-line shim: an executable `pnpm` file containing `exec "$NODE" /opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin/pnpm.cjs "$@"` in a temp dir prepended to `PATH`, where `$NODE` is ZadLoop's bundled node above.)
-
-### Works without a restart (HMR)
-
-ZadLoop enables the DeepSeek Harness HMR bundle by default (`root: []` plus the launcher's profile context): the profile manifest (`dsh.profile.bundles`) and the user patch files are watched, and composition changes — installs included — recompose the running app through one serialized reload. A plugin installed through the Plugin Manager or by the commands above takes effect **without restarting ZadLoop**; source-file watching stays off, which is the intended default.
-
-### Troubleshooting
-
-- **pnpm store conflict (`…/pnpm/store/v11` vs `/v10`, "node_modules was built by a different pnpm major")** — a deferred install fails (and the automatic rollback fails the same way) when the pnpm first on your `PATH` is a different **major** than the one ZadLoop bundles with dshmarket (v11): each major appends its own version segment to the store dir, so two majors cannot share one `node_modules` and `pnpm install --fix` style rebuilds cannot escape it. Fix: put ZadLoop's bundled pnpm first on `PATH` (exactly what the install scripts do), or accept a full from-scratch reinstall of the profile's `node_modules` on your own major. Verified machine case: user `PATH` pnpm 10.34.9 (`~/.local/bin/pnpm`) vs ZadLoop's bundled 11.28.5 — resolved by upgrading to 11.28.5 and symlinking `~/.local/bin/pnpm` to it.
-- **"Waiting for agents to go idle"** — the market refuses to change profile files while an agent session is mid-turn. It queues the install and runs it automatically when sessions finish. Nothing to fix; just let the session finish (or Cancel and retry later).
-- **pnpm refuses git-hosted builds** — plugins fetched from GitHub that run a build script must appear under `allowBuilds` in the profile's `pnpm-workspace.yaml`. ZadLoop's market prompts for this approval; under a plain CLI install, add the exact key pnpm prints, then re-run.
-- **Install stuck "Queued"** — only one deferred mutation runs at a time, and finished (failed) ones stay as notices in the Tasks panel; dismiss them and press the queued operation's **Run now** when no session is active.
-- Path notes: Linux layout (`/opt/ZadLoop/...`, harness under `~/.config/ZadLoop/harness`) is verified; the Windows/macOS install scripts use the standard Electron desktop layout and auto-detect the runtime, but were not exercised on a Windows/macOS machine — if a path differs, pass `ZL_RUNTIME` / `ZL_DSH_HOME`.
-
-### Read-only provenance
-
-- Upstream project: https://github.com/dsh-market/dsh-market (MIT)
-- Catalog of plugins: https://awesome-dsh-plugin.com and `dsh-plugin-catalog` on npm
-- Why GitHub install: installing from a GitHub URL bypasses the npm/registry lookup path, so the market works even when a catalog mirror is unreachable.
