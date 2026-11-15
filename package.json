@@ -28,13 +28,12 @@
     "check": "npm run typecheck && npm run build && node scripts/restart-smoke.mjs",
     "test": "vitest run",
     "test:compat": "vitest run --config vitest.compat.config.ts",
-    "prepack": "npm run build && node scripts/preflight.mjs",
-    "prepare": "npm run build",
     "validate:registry": "node scripts/validate-registry.mjs",
     "snapshot": "mkdir -p data && curl -sf https://awesome-dsh-plugin.com/plugins.json -o data/registry-snapshot.json && curl -sf https://awesome-dsh-plugin.com/readmes.json -o data/readmes-snapshot.json",
     "check:web-auth-capture": "node scripts/check-web-auth-capture.mjs",
     "test:web": "node scripts/check-web-auth-capture.mjs && vitest run --config vitest.web.config.ts",
-    "build:site": "node scripts/build-site.mjs"
+    "build:site": "node scripts/build-site.mjs",
+    "_note": "build/prepack removed: this git distribution ships prebuilt lib/ and client/"
   },
   "dependencies": {
     "js-yaml": "^4.3.2",
