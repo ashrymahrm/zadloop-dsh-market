@@ -6,7 +6,7 @@
 
 English | [العربية](README.ar.md)
 
-This repository is a byte-identical redistribution of the dsh-market plugin, pinned to `dshmarket@1.73.19` and verified working on ZadLoop (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Everything in this page is about ZadLoop only. Written with AI assistance; the error and the fix are real and tested on an actual machine.
+This repository is only a modification of [dsh-market](https://github.com/dsh-market/dsh-market) (the original plugin market for DeepSeek Harness) to make it work on ZadLoop: the plugin itself is redistributed byte-identical, pinned to `dshmarket@1.73.19`, verified against ZadLoop's runtime (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Original site: [dshmarket.com](https://dshmarket.com). All credit to the original project and its authors. Written with AI assistance; the error and the fix are real and tested on an actual machine.
 
 ## Install first: one command
 
@@ -63,9 +63,31 @@ ZadLoop runs the DeepSeek Harness HMR bundle by default: install and plugin swit
 - Stuck "Queued": one deferred change runs at a time. Dismiss finished notices in the Tasks panel and press Run now when no session is active.
 - Windows/macOS scripts use the standard desktop layout and auto-detect the runtime; if a path differs on your machine, pass `ZL_RUNTIME` / `ZL_DSH_HOME`.
 
+## What the plugin does (dsh-market features)
+
+All of this comes from the original dsh-market plugin; nothing below was changed here.
+
+- **Browse & search** the community catalog (4200+ plugins, growing daily): category filters, star counts, top/new sorting, bilingual descriptions
+- **Host-aware discovery**: each card shows the DSH version the plugin requires, and the compatibility filter hides only confirmed mismatches with the running host
+- **Screenshots**: AppStore-style screenshots on the card, with automatic README-extracted shots in the install dialog when the author added none
+- **Comments**: every card opens its discussion thread in place, backed by GitHub Discussions through giscus
+- **Favorites, groups, notes**: bookmark plugins, organise them into named groups with a per-group switch, and write your own one-line description on any installed plugin
+- **Themes**: a dedicated tab for community themes: install, switch live with one click, uninstall to revert
+- **One-click install & uninstall**: confirm the source, watch live progress; most plugins go live after a page refresh
+- **Backup & restore**: export the plugin list and configuration as JSON, import elsewhere, sync through WebDAV or a private GitHub Gist; restores merge and validate
+- **Updates**: per-plugin update checks and one-click updates, including the market itself; "What changed" links to release notes or commits
+- **Resilient GitHub routes**: download routes fall back automatically in restricted networks, with one customizable proxy prefix
+- **Hot disable / enable**: toggling a plugin writes an official patch row and the running app recomposes within a second, no restart
+- **Recovery**: when a broken plugin stops a boot, an "Adjust plugins" page lets you choose what to enable and retries; a diagnostics page lists load order, duplicates, and conflicts, with a one-click AI fix prompt
+- **Zero jargon setup**: if pnpm is missing, the market detects it and offers a one-click automatic setup; a one-click export produces a sanitized log for bug reports
+
+## What the plugin changes in the running app
+
+Everything above is unchanged upstream behavior. This repository only pins the version and verifies it inside ZadLoop; see the install command at the top.
+
 ## Provenance
 
-Upstream project: [dsh-market/dsh-market](https://github.com/dsh-market/dsh-market) (MIT). Plugin catalog: [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com). Installing from GitHub bypasses the npm catalog lookup, so the market keeps working when a mirror is unreachable.
+Upstream project: [dsh-market/dsh-market](https://github.com/dsh-market/dsh-market) (MIT) · Upstream site: [dshmarket.com](https://dshmarket.com). Plugin catalog: [awesome-dsh-plugin.com](https://awesome-dsh-plugin.com). Installing from GitHub bypasses the npm catalog lookup, so the market keeps working when a mirror is unreachable.
 
 ## License
 
