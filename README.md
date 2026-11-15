@@ -30,7 +30,7 @@ Profile other than `web`? Export `ZL_PROFILE=<name>` first (`$env:ZL_PROFILE` on
 
 ## If the install fails, the fix is here
 
-The install fails when the pnpm first on your `PATH` is a different major than the one ZadLoop runs on. Each pnpm major writes its version into its store directory (`v10` vs `v11`), so two majors cannot share one `node_modules`, and rebuilds and the automatic rollback fail the same way. The install script above fixes this for you by putting ZadLoop's own pnpm first on the `PATH` before it installs anything.
+The install fails when the pnpm first on your `PATH` is a different major than the one ZadLoop runs on. Each pnpm major writes its version into its store directory (`v10` vs `v11`), so two majors cannot share one `node_modules`, and rebuilds and the automatic rollback fail the same way. The fix that actually worked — and what the install script above does for you now — is putting ZadLoop's bundled pnpm, version **11.28.5**, first on the `PATH` before anything installs. Done by hand: upgrade your own pnpm to 11.28.5 and point `~/.local/bin/pnpm` at ZadLoop's bundled one with a symlink, and the install passes on the first retry.
 
 ## Waiting for agents to go idle
 
