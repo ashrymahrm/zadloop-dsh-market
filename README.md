@@ -205,7 +205,9 @@ MIT · [dshmarket.com](https://dshmarket.com)
 
 This repository is a byte-identical redistribution of the **dsh-market plugin for ZadLoop** (ZadLoop = DeepSeek Harness desktop distribution), pinned to `dshmarket@1.73.19` — the exact build verified working against the ZadLoop runtime (`@deepseek-ai/dsh` 0.2.2-rc.2, 2026-11-15). Its package name stays `dshmarket`, so the market's self-management (updates, removal, groups) behaves identically.
 
- distribuée identical build. من توزيعة ZadLoop نفسها.
+The package content is untouched; only this README section, provenance notes, and the pinned install instructions were added here.
+
+**توزيعة ZadLoop:** هذا المستودع نسخة مطابقة من بلجن سوق الإضافات (dsh-market) مثبَّتة على النسخة `1.73.19` المجرَّبة والمشغَّالة مع رانتم ZadLoop الحالي (`@deepseek-ai/dsh` ‎0.2.2-rc.2). التثبيت من GitHub بيتجاوز مسار البحث عن الكتالوج في npm، فبيكمّل شغل حتى لو مرايا الكتالوج موصّلة.
 
 ### Install into ZadLoop (Linux)
 
