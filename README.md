@@ -207,9 +207,7 @@ This repository is a byte-identical redistribution of the **dsh-market plugin fo
 
 The package content is untouched; only this README section, provenance notes, and the pinned install instructions were added here.
 
-**توزيعة ZadLoop:** هذا المستودع نسخة مطابقة من بلجن سوق الإضافات (dsh-market) مثبَّتة على النسخة `1.73.19` المجرَّبة والمشغَّالة مع رانتم ZadLoop الحالي (`@deepseek-ai/dsh` ‎0.2.2-rc.2). التثبيت من GitHub بيتجاوز مسار البحث عن الكتالوج في npm، فبيكمّل شغل حتى لو مرايا الكتالوج موصّلة.
-
-### One-command install
+### Install first: one command in your terminal
 
 Type **one line** in your terminal — it finds ZadLoop's own Node runtime, installs the plugin into the `web` profile, and the profile hot-reloads live (no app restart needed, see HMR below).
 
@@ -228,6 +226,16 @@ irm https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools
 When it finishes, open ZadLoop → **Plugins** (or the **Plugin Market** sidebar entry) — the market is active and working.
 
 Other profile than `web`? Export `ZL_PROFILE=<name>` (or `$env:ZL_PROFILE` on Windows) first. Custom install locations: `ZL_RUNTIME`, `ZL_DSH_HOME`, `ZL_NODE`.
+
+### لو التثبيت فشل عندك، الحل جاهز هنا
+
+شكل المشكلة: التثبيت بيفشل برسالة طويلة عن pnpm فيها جملة زي "node_modules was built by a different pnpm (11.28.5)"، وبعدها الاسترجاع التلقائي بيفشل بنفس الشكل، والعملية بتقف على "Waiting for agents to go idle" في لوحة المهام.
+
+السبب: عندك نسختين pnpm على نفس الجهاز. ZadLoop شغال بـ pnpm نسخة 11، وسوق الإضافات بينفّذ التثبيت بالنسخة اللي في الـ `PATH` عندك. لو دي نسخة أقدم (10 مثلًا)، كل نسخة بتكتب رقمها في اسم مجلد الـ store، فالنسختين مش بيدوا يشاركوا نفس `node_modules` والأمر بيقع.
+
+الحل مدمج في سكريبت التثبيت فوق. السكريبت بيحط pnpm بتاع ZadLoop (نسخة 11) الأول في الـ `PATH` قبل ما يثبّت، فالمشكلة دي بتتحل لوحدها. عايز تثبيت يدوي؟ ظبط الـ `PATH` زي ما هو مكتوب في القسم اللي تحت.
+
+ونقطة أخيرة: لو ظهرلك "Waiting for agents to go idle" من غير إيرور، دي مش مشكلة. السوق بيستنى مفيش جلسة وكيل شغالة قبل ما يعدّل ملفات البروفايل، وبيكمّل التثبيت أول ما الجلسة تخلص. اقفل الجلسة وسيبه يكمّل لوحده.
 
 ### Manual install (Linux, equivalent to the script)
 
