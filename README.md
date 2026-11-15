@@ -209,10 +209,34 @@ The package content is untouched; only this README section, provenance notes, an
 
 **توزيعة ZadLoop:** هذا المستودع نسخة مطابقة من بلجن سوق الإضافات (dsh-market) مثبَّتة على النسخة `1.73.19` المجرَّبة والمشغَّالة مع رانتم ZadLoop الحالي (`@deepseek-ai/dsh` ‎0.2.2-rc.2). التثبيت من GitHub بيتجاوز مسار البحث عن الكتالوج في npm، فبيكمّل شغل حتى لو مرايا الكتالوج موصّلة.
 
-### Install into ZadLoop (Linux)
+### One-command install
+
+Type **one line** in your terminal — it finds ZadLoop's own Node runtime, installs the plugin into the `web` profile, and the profile hot-reloads live (no app restart needed, see HMR below).
+
+**Linux / macOS — Terminal:**
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.sh | bash
+```
+
+**Windows — PowerShell:**
+
+```powershell
+irm https://raw.githubusercontent.com/ashrymahrm/zadloop-dsh-market/master/tools/install.ps1 | iex
+```
+
+When it finishes, open ZadLoop → **Plugins** (or the **Plugin Market** sidebar entry) — the market is active and working.
+
+Other profile than `web`? Export `ZL_PROFILE=<name>` (or `$env:ZL_PROFILE` on Windows) first. Custom install locations: `ZL_RUNTIME`, `ZL_DSH_HOME`, `ZL_NODE`.
+
+### Manual install (Linux, equivalent to the script)
+
+If a `pnpm` different in major version from ZadLoop's own (`dshmarket` bundles it — currently v11) is first on your `PATH`, the store location mismatches and the command fails; put ZadLoop's bundled pnpm first (the script does this for you):
 
 ```sh
 RUNTIME=/opt/ZadLoop/resources/app.asar.unpacked/runtime
+DSH_HOME=~/.config/ZadLoop/harness \
+PATH="/opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin:$PATH" \
 /opt/ZadLoop/resources/primary-runtime/dependencies/node/bin/node \
   --expose-internals --use-system-ca \
   --import file://$RUNTIME/lib/runtime.js \
@@ -220,7 +244,18 @@ RUNTIME=/opt/ZadLoop/resources/app.asar.unpacked/runtime
   plugin --profile web add github:ashrymahrm/zadloop-dsh-market
 ```
 
-Then restart ZadLoop (or wait for the profile HMR reload) and open the market from the sidebar / Plugins page.
+(The `pnpm/bin` directory has no `pnpm` executable on some installs — if `dsh` then fails to find pnpm, create a one-line shim: an executable `pnpm` file containing `exec "$NODE" /opt/ZadLoop/resources/primary-runtime/dependencies/pnpm/bin/pnpm.cjs "$@"` in a temp dir prepended to `PATH`, where `$NODE` is ZadLoop's bundled node above.)
+
+### Works without a restart (HMR)
+
+ZadLoop enables the DeepSeek Harness HMR bundle by default (`root: []` plus the launcher's profile context): the profile manifest (`dsh.profile.bundles`) and the user patch files are watched, and composition changes — installs included — recompose the running app through one serialized reload. A plugin installed through the Plugin Manager or by the commands above takes effect **without restarting ZadLoop**; source-file watching stays off, which is the intended default.
+
+### Troubleshooting
+
+- **"Waiting for agents to go idle"** — the market refuses to change profile files while an agent session is mid-turn. It queues the install and runs it automatically when sessions finish. Nothing to fix; just let the session finish (or Cancel and retry later).
+- **pnpm refuses git-hosted builds** — plugins fetched from GitHub that run a build script must appear under `allowBuilds` in the profile's `pnpm-workspace.yaml`. ZadLoop's market prompts for this approval; under a plain CLI install, add the exact key pnpm prints, then re-run.
+- **Install stuck "Queued"** — only one deferred mutation runs at a time, and finished (failed) ones stay as notices in the Tasks panel; dismiss them and press the queued operation's **Run now** when no session is active.
+- Path notes: Linux layout (`/opt/ZadLoop/...`, harness under `~/.config/ZadLoop/harness`) is verified; the Windows/macOS install scripts use the standard Electron desktop layout and auto-detect the runtime, but were not exercised on a Windows/macOS machine — if a path differs, pass `ZL_RUNTIME` / `ZL_DSH_HOME`.
 
 ### Read-only provenance
 
